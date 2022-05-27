@@ -1,13 +1,9 @@
-import time
 
 import scapy.all as scapy
 import argparse
 import socket
-import sys
 import time
 import threading
-
-
 
 
 print("-"*50)
@@ -43,28 +39,38 @@ def print_result(scan_list):
         print(client["ip"]+"\t\t" + client["mac"])
 
 
-
 options = get_arguments()
 result_list = scan(options.target)
-print_result(result_list)
+if result_list:
+    print_result(result_list)
+
+else:
+    print("NO ip ADDRESS FOUND")
+    print("-" * 50)
+    exit()
 print("-"*50)
 
 usage =input("ENTER TARGET IP : ")
-
+tar2 = socket.gethostbyname(str(usage))
 print("-"*50)
 print("SCANNIN TRAGET IP.......")
 print("-"*50)
-
+print("[The 1020 ports scanned but not shown below are in state: closed]")
+print("      "
+      "")
 def scan_port(port):
     '''print("scanning port",port)'''
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(0.5)
-    conn = s.connect_ex((usage,port))
+    conn = s.connect_ex((tar2,port))
+
     if(not conn):
         print("PORT {} is Open".format(port))
-        s.close()
 
-for port in range(1,1000):
+
+        '''print("OPEN PORTS NOT FOUND")'''
+
+for port in range(1,1020):
 
     thread = threading.Thread(target = scan_port, args = (port,))
     thread.start()
@@ -74,6 +80,6 @@ end_time = time.time()
 print("   "
       "")
 
-print("           [SCAN DURATION :",end_time-stat_time,"Sec]")
+print("                          [SCAN DURATION :",round(end_time-stat_time),"Sec]")
 
 print("_"*50)
